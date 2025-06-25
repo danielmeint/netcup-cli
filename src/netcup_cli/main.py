@@ -35,6 +35,20 @@ def handle_error(error: Exception) -> None:
         console.print(f"[red]API Error:[/red] {error}")
         if hasattr(error, 'status_code') and error.status_code:
             console.print(f"[dim]Status Code: {error.status_code}[/dim]")
+            
+            # Provide specific help for common errors
+            if error.status_code == 4008:
+                console.print("\n[yellow]💡 Tip:[/yellow] This error usually means:")
+                console.print("  • DNS management is not enabled for this domain in your netcup CCP")
+                console.print("  • The domain doesn't use netcup nameservers") 
+                console.print("  • Your API key lacks DNS management permissions")
+                console.print("  • The domain type may not support DNS API (check if it's 'zusätzlich')")
+                console.print("\n[cyan]To fix:[/cyan]")
+                console.print("  1. Log into your netcup Customer Control Panel (CCP)")
+                console.print("  2. Go to 'Domains' → select your domain")
+                console.print("  3. Look for 'DNS' or 'DNS Management' section") 
+                console.print("  4. Ensure DNS management is enabled/activated")
+                console.print("\nRun '[cyan]netcup dns check[/cyan]' for more information.")
     elif isinstance(error, NetcupError):
         console.print(f"[red]Error:[/red] {error}")
     else:
@@ -45,11 +59,18 @@ def handle_error(error: Exception) -> None:
 @click.group()
 @click.version_option(version="0.1.0", prog_name="netcup")
 @click.option('--verbose', '-v', is_flag=True, help='Enable verbose output')
+@click.option('--debug', is_flag=True, help='Enable debug output')
 @click.pass_context
-def cli(ctx: click.Context, verbose: bool) -> None:
+def cli(ctx: click.Context, verbose: bool, debug: bool) -> None:
     """netcup CLI - Manage your netcup DNS records from the command line."""
     ctx.ensure_object(dict)
     ctx.obj['verbose'] = verbose
+    ctx.obj['debug'] = debug
+    
+    # Set debug environment variable for other modules
+    if debug:
+        import os
+        os.environ['NETCUP_DEBUG'] = '1'
 
 
 @cli.group()
@@ -138,6 +159,38 @@ def status() -> None:
 def dns() -> None:
     """DNS management commands."""
     pass
+
+
+@dns.command()
+def check() -> None:
+    """Check if DNS API is working and list requirements."""
+    try:
+        config_manager = ConfigManager()
+        api_client = NetcupAPIClient(config_manager)
+        
+        # Test authentication first
+        session_id = api_client.login()
+        console.print("[green]✓[/green] Authentication successful")
+        
+        console.print("\n[bold]DNS API Requirements:[/bold]")
+        console.print("To use the DNS API, you need domains that:")
+        console.print("  1. Are registered through your netcup account, OR")
+        console.print("  2. Have netcup nameservers configured")
+        console.print("  3. Are set up for DNS management in your netcup CCP")
+        
+        console.print("\n[bold]netcup Nameservers:[/bold]")
+        console.print("  • root-dns.netcup.net")
+        console.print("  • second-dns.netcup.net") 
+        console.print("  • third-dns.netcup.net")
+        
+        console.print("\n[yellow]If you're getting 'Input value in invalid format' errors,[/yellow]")
+        console.print("[yellow]your domain may not be configured for netcup DNS management.[/yellow]")
+        
+        api_client.logout()
+        
+    except Exception as e:
+        handle_error(e)
+        sys.exit(1)
 
 
 @dns.group()

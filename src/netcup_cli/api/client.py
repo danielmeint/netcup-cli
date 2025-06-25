@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 from ..config.manager import ConfigManager, NetcupConfig
 from ..utils.exceptions import APIError, SessionExpiredError
+from ..utils.debug import log_api_response, print_debug_info, is_debug_mode
 
 
 class APIResponse(BaseModel):
@@ -67,6 +68,11 @@ class NetcupAPIClient:
         except ValueError as e:
             raise APIError(f"Invalid JSON response from API: {e}")
         
+        # Debug logging
+        if is_debug_mode():
+            print_debug_info(f"Raw API Response for {action}", data)
+            log_api_response(action, data, params)
+        
         api_response = APIResponse(**data)
         
         # Check if the API returned an error
@@ -87,6 +93,7 @@ class NetcupAPIClient:
         """Get base parameters that are included in most API calls."""
         params = {
             "apikey": self.config.api_key,
+            "customernumber": self.config.customer_number,  # This was missing!
         }
         
         if self.session_id:
@@ -165,6 +172,10 @@ class NetcupAPIClient:
         
         try:
             self._make_request("logout", params)
+        except APIError as e:
+            # Log the error but don't fail - we'll clear session anyway
+            if is_debug_mode():
+                print_debug_info("Logout Error", str(e))
         finally:
             # Always clear the session, even if logout fails
             self._clear_session()
