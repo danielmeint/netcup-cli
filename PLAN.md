@@ -138,10 +138,10 @@ netcup --help
 
 #### Phase 1: Foundation (Week 1)
 - [x] Project structure setup
-- [ ] Basic CLI framework with Click
-- [ ] API client foundation
-- [ ] Authentication implementation
-- [ ] Configuration management
+- [x] Basic CLI framework with Click
+- [x] API client foundation
+- [x] Authentication implementation
+- [x] Configuration management
 
 #### Phase 2: Core DNS Operations (Week 2)
 - [ ] List zones and records
