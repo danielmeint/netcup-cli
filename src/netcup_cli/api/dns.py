@@ -52,7 +52,7 @@ class DNSManager:
         params = {"domainname": domain}
         response = self.api_client.make_authenticated_request("infoDnsZone", params)
         
-        if not response.responsedata:
+        if not response.responsedata or not isinstance(response.responsedata, dict):
             raise ValueError(f"No zone data returned for domain: {domain}")
         
         return DNSZone(**response.responsedata)
@@ -70,11 +70,16 @@ class DNSManager:
         params = {"domainname": domain}
         response = self.api_client.make_authenticated_request("infoDnsRecords", params)
         
-        if not response.responsedata or "dnsrecords" not in response.responsedata:
+        # Handle different responsedata types
+        if not response.responsedata:
             return []
+            
+        if isinstance(response.responsedata, dict) and "dnsrecords" in response.responsedata:
+            records_data = response.responsedata["dnsrecords"]
+            if isinstance(records_data, list):
+                return [DNSRecord(**record) for record in records_data]
         
-        records_data = response.responsedata["dnsrecords"]
-        return [DNSRecord(**record) for record in records_data]
+        return []
     
     def update_records(self, domain: str, records: List[DNSRecord]) -> bool:
         """

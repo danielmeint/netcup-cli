@@ -19,7 +19,7 @@ class APIResponse(BaseModel):
     statuscode: int
     longmessage: str
     shortmessage: str
-    responsedata: Optional[Dict[str, Any]] = None
+    responsedata: Optional[Any] = None  # Can be dict, list, null, etc.
 
 
 class NetcupAPIClient:
