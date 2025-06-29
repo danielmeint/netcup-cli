@@ -1,5 +1,5 @@
 [project]
-name = "netcup-cli"
+name = "netcup-dns-cli"
 version = "0.1.0"
 description = "A CLI tool for managing netcup DNS records via the netcup API"
 requires-python = ">=3.8"
