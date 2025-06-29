@@ -218,4 +218,4 @@ fabric.properties
 # .idea
 
 .context
-.code-workspace
+*.code-workspace
