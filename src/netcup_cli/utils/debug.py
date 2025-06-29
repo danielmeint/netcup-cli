@@ -5,11 +5,13 @@ Debug utilities for netcup CLI.
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 
 def log_api_response(
-    action: str, response_data: Dict[str, Any], request_params: Dict[str, Any] = None
+    action: str,
+    response_data: Dict[str, Any],
+    request_params: Optional[Dict[str, Any]] = None,
 ) -> None:
     """
     Log API response to a debug file for analysis.

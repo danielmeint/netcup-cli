@@ -9,7 +9,7 @@ import requests
 from pydantic import BaseModel
 
 from ..config.manager import ConfigManager
-from ..utils.debug import log_api_response, print_debug_info, is_debug_mode
+from ..utils.debug import is_debug_mode, log_api_response, print_debug_info
 from ..utils.exceptions import APIError, SessionExpiredError
 
 
@@ -178,7 +178,7 @@ class NetcupAPIClient:
             self._clear_session()
 
     def make_authenticated_request(
-            self, action: str, params: Dict[str, Any]
+        self, action: str, params: Dict[str, Any]
     ) -> APIResponse:
         """
         Make an authenticated request to the API.

@@ -13,10 +13,10 @@ from .api.client import NetcupAPIClient
 from .api.dns import DNSManager
 from .config.manager import ConfigManager
 from .utils.exceptions import (
-    NetcupError,
-    ConfigurationError,
-    AuthenticationError,
     APIError,
+    AuthenticationError,
+    ConfigurationError,
+    NetcupError,
 )
 
 console = Console()
@@ -27,12 +27,14 @@ def handle_error(error: Exception) -> None:
     if isinstance(error, ConfigurationError):
         console.print(f"[red]Configuration Error:[/red] {error}")
         console.print(
-            "\n[yellow]Tip:[/yellow] Run 'netcup auth login' to set up your credentials."
+            "\n[yellow]Tip:[/yellow] Run 'netcup auth login' to set up your "
+            "credentials."
         )
     elif isinstance(error, AuthenticationError):
         console.print(f"[red]Authentication Error:[/red] {error}")
         console.print(
-            "\n[yellow]Tip:[/yellow] Check your credentials and try 'netcup auth login' again."
+            "\n[yellow]Tip:[/yellow] Check your credentials and try "
+            "'netcup auth login' again."
         )
     elif isinstance(error, APIError):
         console.print(f"[red]API Error:[/red] {error}")
@@ -43,12 +45,14 @@ def handle_error(error: Exception) -> None:
             if error.status_code == 4008:
                 console.print("\n[yellow]💡 Tip:[/yellow] This error usually means:")
                 console.print(
-                    "  • DNS management is not enabled for this domain in your netcup CCP"
+                    "  • DNS management is not enabled for this domain in your "
+                    "netcup CCP"
                 )
                 console.print("  • The domain doesn't use netcup nameservers")
                 console.print("  • Your API key lacks DNS management permissions")
                 console.print(
-                    "  • The domain type may not support DNS API (check if it's 'zusätzlich')"
+                    "  • The domain type may not support DNS API "
+                    "(check if it's 'zusätzlich')"
                 )
                 console.print("\n[cyan]To fix:[/cyan]")
                 console.print("  1. Log into your netcup Customer Control Panel (CCP)")
@@ -115,7 +119,8 @@ def login(customer_number: str, api_key: str, api_password: str) -> None:
         console.print("[green]✓[/green] Authentication successful!")
         console.print(f"[dim]Session ID: {session_id[:8]}...[/dim]")
         console.print(
-            "\n[yellow]Credentials have been securely stored in your system keyring.[/yellow]"
+            "\n[yellow]Credentials have been securely stored in your system "
+            "keyring.[/yellow]"
         )
 
     except Exception as e:
@@ -136,9 +141,9 @@ def logout() -> None:
         except ConfigurationError:
             # No credentials stored, that's fine
             pass
-        except Exception:
+        except Exception as e:
             # Logout failed, but we'll still clear local credentials
-            pass
+            console.print(f"[dim]Warning: Could not logout from API: {e}[/dim]")
 
         # Clear stored credentials
         config_manager.clear_credentials()
@@ -188,7 +193,7 @@ def check() -> None:
         api_client = NetcupAPIClient(config_manager)
 
         # Test authentication first
-        session_id = api_client.login()
+        api_client.login()
         console.print("[green]✓[/green] Authentication successful")
 
         console.print("\n[bold]DNS API Requirements:[/bold]")
@@ -203,10 +208,12 @@ def check() -> None:
         console.print("  • third-dns.netcup.net")
 
         console.print(
-            "\n[yellow]If you're getting 'Input value in invalid format' errors,[/yellow]"
+            "\n[yellow]If you're getting 'Input value in invalid format' "
+            "errors,[/yellow]"
         )
         console.print(
-            "[yellow]your domain may not be configured for netcup DNS management.[/yellow]"
+            "[yellow]your domain may not be configured for netcup DNS "
+            "management.[/yellow]"
         )
 
         api_client.logout()
@@ -325,10 +332,11 @@ def add(
 
         if success:
             console.print(
-                f"[green]✓[/green] Added {record_type.upper()} record for {hostname}.{domain}"
+                f"[green]✓[/green] Added {record_type.upper()} record for "
+                f"{hostname}.{domain}"
             )
         else:
-            console.print(f"[red]✗[/red] Failed to add DNS record")
+            console.print("[red]✗[/red] Failed to add DNS record")
             sys.exit(1)
 
     except Exception as e:
@@ -351,7 +359,7 @@ def delete(domain: str, record_id: str) -> None:
         if success:
             console.print(f"[green]✓[/green] Deleted DNS record {record_id}")
         else:
-            console.print(f"[red]✗[/red] Failed to delete DNS record")
+            console.print("[red]✗[/red] Failed to delete DNS record")
             sys.exit(1)
 
     except Exception as e:
@@ -375,7 +383,8 @@ def update(
     """Update a DNS record."""
     if not any([hostname, destination, priority]):
         console.print(
-            "[red]Error:[/red] At least one of --hostname, --destination, or --priority must be provided"
+            "[red]Error:[/red] At least one of --hostname, --destination, or "
+            "--priority must be provided"
         )
         sys.exit(1)
 
@@ -391,7 +400,7 @@ def update(
         if success:
             console.print(f"[green]✓[/green] Updated DNS record {record_id}")
         else:
-            console.print(f"[red]✗[/red] Failed to update DNS record")
+            console.print("[red]✗[/red] Failed to update DNS record")
             sys.exit(1)
 
     except Exception as e:

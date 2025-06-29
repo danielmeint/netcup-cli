@@ -35,7 +35,7 @@ class ConfigManager:
     CONFIG_DIR = Path.home() / ".config" / "netcup-cli"
     CONFIG_FILE = CONFIG_DIR / "config"
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.config_dir = self.CONFIG_DIR
         self.config_file = self.CONFIG_FILE
         self._ensure_config_dir()
@@ -92,6 +92,11 @@ class ConfigManager:
                 f"Missing required configuration: {', '.join(missing)}. "
                 "Please run 'netcup auth login' or set environment variables."
             )
+
+        # Mypy type narrowing: these are guaranteed to be strings after validation
+        assert customer_number is not None
+        assert api_key is not None
+        assert api_password is not None
 
         return NetcupConfig(
             customer_number=customer_number,
