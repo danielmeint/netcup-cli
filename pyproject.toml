@@ -1,0 +1,79 @@
+[project]
+name = "netcup-dns-cli"
+version = "0.1.2"
+description = "A CLI tool for managing netcup DNS records via the netcup API"
+requires-python = ">=3.8"
+dependencies = [
+    "click>=8.1.0",
+    "requests>=2.31.0",
+    "rich>=13.0.0",
+    "keyring>=24.0.0",
+    "pydantic>=2.5.0",
+    "python-dotenv>=1.0.0",
+]
+authors = [
+    { name = "Daniel Meint", email = "pilots-4-trilogy@icloud.com" }
+]
+readme = "README.md"
+license = { text = "MIT" }
+homepage = "https://github.com/danielmeint/netcup-cli"
+repository = "https://github.com/danielmeint/netcup-cli"
+keywords = ["netcup", "dns", "cli", "api", "nameserver", "domain"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: Name Service (DNS)",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Utilities",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+]
+
+[project.scripts]
+netcup = "netcup_cli.main:cli"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/netcup_cli"]
+
+[tool.black]
+line-length = 88
+target-version = ['py313']
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+select = ["E", "F", "W", "C", "I", "N"]
+
+[tool.mypy]
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[dependency-groups]
+dev = [
+    "build>=1.2.2.post1",
+    "twine>=6.1.0",
+]
