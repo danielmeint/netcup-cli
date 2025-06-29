@@ -1,5 +1,9 @@
 # netcup CLI
 
+[![PyPI version](https://badge.fury.io/py/netcup-cli.svg)](https://badge.fury.io/py/netcup-cli)
+[![Python Versions](https://img.shields.io/pypi/pyversions/netcup-cli.svg)](https://pypi.org/project/netcup-cli/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A Python command-line interface for managing DNS records via the netcup DNS API.
 
 ## Features
@@ -12,9 +16,17 @@ A Python command-line interface for managing DNS records via the netcup DNS API.
 
 ## Installation
 
+### From PyPI (Recommended)
+
+```bash
+pip install netcup-cli
+```
+
+### From Source
+
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/danielmeint/netcup-cli.git
 cd netcup-cli
 
 # Install with uv (recommended)

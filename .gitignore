@@ -120,6 +120,7 @@ Thumbs.db
 .env.local
 .env.production
 api_debug.json
+debug/
 
 # VirtualEnv template
 # Virtualenv
@@ -215,3 +216,6 @@ fabric.properties
 
 # idea folder, uncomment if you don't need it
 # .idea
+
+.context
+.code-workspace
