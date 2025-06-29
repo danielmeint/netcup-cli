@@ -904,8 +904,8 @@ wheels = [
 ]
 
 [[package]]
-name = "netcup-cli"
-version = "0.1.0"
+name = "netcup-dns-cli"
+version = "0.1.2"
 source = { editable = "." }
 dependencies = [
     { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
